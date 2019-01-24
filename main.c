@@ -1,14 +1,16 @@
 #include <SDL2/SDL.h>
-#include "main.h"
+#include <glad/glad.h>
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
 
 void update()
 {
-    printf("Update");
+    printf("Update\n");
 }
 
 void draw()
 {
-    printf("Draw");
+    printf("Draw\n");
 }
 
 int main()
