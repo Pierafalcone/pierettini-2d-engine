@@ -1,32 +1,31 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "main.h"
 
-void init(assets_t *assets)
+assets_t *assets;
+
+void __init__()
 {
-    assets->sprites = malloc(sizeof(assets_t) * 4);
-    assets->sprites[0] = sprite_init("gatto.jpg");
+    sprite_load(assets, "pizza.jpg", 0);
+    sprite_load(assets, "scooter.jpg", 1);
 }
 
-void update(assets_t *assets)
+void __update__()
 {
     //printf("Update\n");
 }
 
-void draw(assets_t *assets)
+void __draw__()
 {
-    sprite_draw(&assets->sprites[0]);
+    sprite_draw(0, 0, 0);
 }
 
 int main()
 {
+    /* START SDL STUFF */
+
     SDL_Init(SDL_INIT_VIDEO);
 
     SDL_Window *window = SDL_CreateWindow("OpenGL", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 512, 512, SDL_WINDOW_OPENGL);
-    if (!window)
-    {
-        SDL_Log("unable to open the window: %s", SDL_GetError());
-        return -1;
-    }
 
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
@@ -101,10 +100,11 @@ int main()
 
     GLuint texture;
 
-    assets_t *assets;
-    assets = malloc(sizeof(assets_t));
+    /* END SDL STUFF */
 
-    init(assets);
+    assets = assets_new(16);
+
+    __init__();
 
     for (;;)
     {
@@ -115,10 +115,8 @@ int main()
                 return 0;
         }
 
-        update(assets);
-        draw(assets);
-
-        glDrawArrays(GL_TRIANGLES, 0, 6);
+        __update__();
+        __draw__();
 
         SDL_GL_SwapWindow(window);
     }

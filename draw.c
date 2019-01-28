@@ -57,29 +57,37 @@ GLuint compile_shader(GLenum shader_type, const char *filename)
     return shader;
 }
 
-sprite_t sprite_init(const char *filename)
+void sprite_load(assets_t *assets, const char *filename, int id)
 {
     sprite_t sprite;
-    int colors;
-    sprite.x = 0;
-    sprite.y = 0;
-    sprite.pixels = stbi_load(filename, &sprite.width, &sprite.height, &colors, 4);
 
-    GLuint texture;
+    sprite.pixels = stbi_load(filename, &sprite.width, &sprite.height, 0, 4);
 
-    glGenTextures(1, &texture);
-
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, texture);
+    glBindTexture(GL_TEXTURE_2D, assets->textures[id]);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, sprite.width, sprite.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, sprite.pixels);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    return sprite;
+    assets->sprites[id] = sprite;
 }
 
-void sprite_draw(sprite_t *sprite)
+void sprite_draw(int sprite_id, int x, int y)
 {
-    // SDL_Log("%d", sprite->width);
-    // SDL_Log("%d", sprite->height);
+    glDrawArrays(GL_TRIANGLES, 0 + sprite_id, 6 + sprite_id);
+}
+
+int gfx_init(SDL_Window *window)
+{
+    return 0;
+}
+
+assets_t *assets_new(int sprite_num)
+{
+    assets_t *assets = malloc(sizeof(assets_t));
+    assets->sprites = malloc(sizeof(sprite_t) * sprite_num);
+    assets->textures = malloc(sizeof(GLuint) * sprite_num);
+    glGenTextures(sprite_num, assets->textures);
+    assets->sprite_len = sprite_num;
+    assets->texture_len = sprite_num;
+    return assets;
 }
