@@ -23,13 +23,16 @@ void __update__()
 
 void __draw__()
 {
-    for (int i = 0; i < 40; i++)
-    {
-        position_x = 256 + (sin(counter + (0.1 * i + i)) * 200);
-        position_y = 256 + (cos(counter + (0.1 * i)) * 200);
+    sprite_draw(assets, 0, 64, 64);
+    sprite_draw(assets, 1, 128, 128);
 
-        sprite_draw(assets, 0, position_x, position_y);
-    }
+    // for (int i = 0; i < 40; i++)
+    // {
+    //     position_x = 256 + (sin(counter + (0.1 * i + i)) * 200);
+    //     position_y = 256 + (cos(counter + (0.1 * i)) * 200);
+
+    //     sprite_draw(assets, 0, position_x, position_y);
+    // }
 }
 
 int main()

@@ -67,21 +67,24 @@ GLuint compile_shader(GLenum shader_type, const char *filename)
 
 void sprite_load(assets_t *assets, const char *filename, int id)
 {
+    GLuint texture;
     sprite_t sprite;
 
     sprite.pixels = stbi_load(filename, &sprite.width, &sprite.height, 0, 4);
 
-    glGenTextures(1, &assets->sprites[id].texture);
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, sprite.width, sprite.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, sprite.pixels);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    glBindTexture(GL_TEXTURE_2D, 0);
-
     glUniform2f(window_size_uniform, WINDOW_WIDTH, WINDOW_HEIGHT);
     glUniform1f(scale_uniform, SPRITE_SIZE);
 
+    glBindTexture(GL_TEXTURE_2D, 0);
+
     assets->sprites[id] = sprite;
+    assets->sprites[id].texture = texture;
 }
 
 void sprite_draw(assets_t *assets, int sprite_id, int x, int y)
