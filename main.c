@@ -1,22 +1,35 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "main.h"
+#include <math.h>
+
+const int SPRITE_NUM = 16;
 
 assets_t *assets;
+
+float counter = 0;
+float position_x = 0;
+float position_y = 0;
 
 void __init__()
 {
     sprite_load(assets, "pizza.jpg", 0);
-    sprite_load(assets, "scooter.jpg", 1);
+    sprite_load(assets, "scooter.png", 1);
 }
 
 void __update__()
 {
-    //printf("Update\n");
+    counter += 0.0005;
 }
 
 void __draw__()
 {
-    sprite_draw(0, 0, 0);
+    for (int i = 0; i < 40; i++)
+    {
+        position_x = 256 + (sin(counter + (0.1 * i + i)) * 200);
+        position_y = 256 + (cos(counter + (0.1 * i)) * 200);
+
+        sprite_draw(assets, 0, position_x, position_y);
+    }
 }
 
 int main()
@@ -38,43 +51,7 @@ int main()
     // set the current clear color
     glClearColor(1, 0, 0, 1);
 
-    // allocate 1 VAO (in GPU)
-    GLuint vao;
-    glGenVertexArrays(1, &vao);
-    // bind the VAO (in GPU). now it is the active one
-    glBindVertexArray(vao);
-
-    GLuint vbo[2];
-    glGenBuffers(2, vbo);
-
-    float vertices[] = {
-        // First triangle
-        -0.5, -0.5, 0,
-        0.5, 0.5, 0,
-        -0.5, 0.5, 0,
-        // Second triangle
-        0.5, -0.5, 0,
-        -0.5, -0.5, 0,
-        0.5, 0.5, 0};
-    float uvs[] = {
-        // First triangle
-        0, -1,
-        -1, 0,
-        0, 0,
-        // Second triangle
-        0, 0,
-        1, 0,
-        0, 1};
-
-    glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-
-    glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(uvs), uvs, GL_STATIC_DRAW);
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
+    init_geometry(SPRITE_NUM);
 
     // create a new program/pipeline (in GPU)
     GLuint program = glCreateProgram();
@@ -98,11 +75,9 @@ int main()
     // set the currently active program/pipeline
     glUseProgram(program);
 
-    GLuint texture;
-
     /* END SDL STUFF */
 
-    assets = assets_new(16);
+    assets = assets_new(program, SPRITE_NUM);
 
     __init__();
 
@@ -114,6 +89,8 @@ int main()
             if (event.type == SDL_QUIT)
                 return 0;
         }
+
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         __update__();
         __draw__();

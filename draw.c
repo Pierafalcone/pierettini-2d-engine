@@ -1,5 +1,13 @@
 #include "draw.h"
 
+const int WINDOW_WIDTH = 512;
+const int WINDOW_HEIGHT = 512;
+const int SPRITE_SIZE = 64;
+
+GLint pos_uniform;
+GLint window_size_uniform;
+GLint scale_uniform;
+
 GLuint compile_shader(GLenum shader_type, const char *filename)
 {
     SDL_RWops *rw = SDL_RWFromFile(filename, "rb");
@@ -63,17 +71,26 @@ void sprite_load(assets_t *assets, const char *filename, int id)
 
     sprite.pixels = stbi_load(filename, &sprite.width, &sprite.height, 0, 4);
 
-    glBindTexture(GL_TEXTURE_2D, assets->textures[id]);
+    glGenTextures(1, &assets->sprites[id].texture);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, sprite.width, sprite.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, sprite.pixels);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    glUniform2f(window_size_uniform, WINDOW_WIDTH, WINDOW_HEIGHT);
+    glUniform1f(scale_uniform, SPRITE_SIZE);
+
     assets->sprites[id] = sprite;
 }
 
-void sprite_draw(int sprite_id, int x, int y)
+void sprite_draw(assets_t *assets, int sprite_id, int x, int y)
 {
-    glDrawArrays(GL_TRIANGLES, 0 + sprite_id, 6 + sprite_id);
+    glUniform2f(pos_uniform, x, y);
+
+    glBindTexture(GL_TEXTURE_2D, assets->sprites[sprite_id].texture);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 int gfx_init(SDL_Window *window)
@@ -81,13 +98,62 @@ int gfx_init(SDL_Window *window)
     return 0;
 }
 
-assets_t *assets_new(int sprite_num)
+assets_t *assets_new(GLint* program, int sprite_num)
 {
     assets_t *assets = malloc(sizeof(assets_t));
     assets->sprites = malloc(sizeof(sprite_t) * sprite_num);
-    assets->textures = malloc(sizeof(GLuint) * sprite_num);
-    glGenTextures(sprite_num, assets->textures);
     assets->sprite_len = sprite_num;
-    assets->texture_len = sprite_num;
+    assets->program = program;
+
+    get_uniforms(program);
+
     return assets;
+}
+
+void init_geometry(int sprite_num)
+{
+    // allocate 1 VAO (in GPU)
+    GLuint vao;
+    glGenVertexArrays(1, &vao);
+    // bind the VAO (in GPU). now it is the active one
+    glBindVertexArray(vao);
+
+    GLuint vbo[2];
+    glGenBuffers(2, vbo);
+
+    float vertices[] = {
+        // First triangle
+        -1, -1, 0,
+        1, 1, 0,
+        -1, 1, 0,
+        // Second triangle
+        1, -1, 0,
+        -1, -1, 0,
+        1, 1, 0};
+    float uvs[] = {
+        // First triangle
+        0, -1,
+        -1, 0,
+        0, 0,
+        // Second triangle
+        0, 0,
+        1, 0,
+        0, 1};
+
+    glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+    glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(uvs), uvs, GL_STATIC_DRAW);
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
+}
+
+void get_uniforms(GLuint program)
+{
+    pos_uniform = glGetUniformLocation(program, "position");
+    window_size_uniform = glGetUniformLocation(program, "window_size");
+    scale_uniform = glGetUniformLocation(program, "scale");
 }

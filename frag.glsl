@@ -8,6 +8,7 @@ uniform sampler2D tex_base_color;
 
 void main()
 {
-    vec3 base_color = texture(tex_base_color, vec2(uv.x, 1 - uv.y)).xyz;
+    float flipped_y = -uv.y;
+    vec3 base_color = texture(tex_base_color, vec2(uv.x, 1 - flipped_y)).xyz;
     color = vec4(base_color, 1);
 }
