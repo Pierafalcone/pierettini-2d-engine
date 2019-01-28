@@ -1,6 +1,12 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "main.h"
 
+void init(assets_t *assets)
+{
+    assets->sprites = malloc(sizeof(assets_t) * 4);
+    assets->sprites[0] = sprite_init("gatto.jpg");
+}
+
 void update(assets_t *assets)
 {
     //printf("Update\n");
@@ -9,39 +15,6 @@ void update(assets_t *assets)
 void draw(assets_t *assets)
 {
     sprite_draw(&assets->sprites[0]);
-}
-
-void init(assets_t *assets)
-{
-    assets->sprites = malloc(sizeof(assets_t) * 4);
-    assets->sprites[0] = sprite_init("gatto.jpg");
-}
-
-sprite_t sprite_init(const char *filename)
-{
-    sprite_t sprite;
-    int colors;
-    sprite.x = 0;
-    sprite.y = 0;
-    sprite.pixels = stbi_load(filename, &sprite.width, &sprite.height, &colors, 4);
-
-    GLuint texture;
-
-    glGenTextures(1, &texture);
-
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, texture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, sprite.width, sprite.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, sprite.pixels);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    return sprite;
-}
-
-void sprite_draw(sprite_t *sprite)
-{
-    // SDL_Log("%d", sprite->width);
-    // SDL_Log("%d", sprite->height);
 }
 
 int main()
