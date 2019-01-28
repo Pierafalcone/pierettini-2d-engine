@@ -1,4 +1,6 @@
-
+#include <SDL2/SDL.h>
+#include <glad/glad.h>
+#include "stb_image.h"
 
 typedef struct sprite
 {
