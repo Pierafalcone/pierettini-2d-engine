@@ -14,6 +14,10 @@ void __init__()
 {
     sprite_load(assets, "pizza.jpg", 0);
     sprite_load(assets, "scooter.png", 1);
+    sprite_load(assets, "ball.gif", 2);
+    sprite_load(assets, "bread.gif", 3);
+    sprite_load(assets, "mount.gif", 4);
+    sprite_load(assets, "sushi.gif", 5);
 }
 
 void __update__()
@@ -23,17 +27,16 @@ void __update__()
 
 void __draw__()
 {
-    sprite_draw(assets, 0, 64, 64);
-    sprite_draw(assets, 1, 128, 128);
+    // sprite_draw(assets, 0, 64, 64);
+    // sprite_draw(assets, 1, 128, 128);
 
+    for (int i = 0; i < 40; i++)
+    {
+        position_x = 256 + (sin(counter + (0.1 * i + i)) * 200);
+        position_y = 256 + (cos(counter + (0.1 * i)) * 200);
 
-    // for (int i = 0; i < 40; i++)
-    // {
-    //     position_x = 256 + (sin(counter + (0.1 * i + i)) * 200);
-    //     position_y = 256 + (cos(counter + (0.1 * i)) * 200);
-
-    //     sprite_draw(assets, i % 2, position_x, position_y);
-    // }
+        sprite_draw(assets, i % 6, position_x, position_y);
+    }
 }
 
 int main()
