@@ -101,7 +101,7 @@ int gfx_init(SDL_Window *window)
     return 0;
 }
 
-assets_t *assets_new(GLint* program, int sprite_num)
+assets_t *assets_new(GLint *program, int sprite_num)
 {
     assets_t *assets = malloc(sizeof(assets_t));
     assets->sprites = malloc(sizeof(sprite_t) * sprite_num);
