@@ -26,7 +26,7 @@ typedef struct assets
 } assets_t;
 
 GLuint compile_shader(GLenum shader_type, const char *filename);
-void sprite_load(assets_t *assets, const char *filename, int id);
+void sprite_load(assets_t *assets, int id, const char *filename);
 void sprite_draw(assets_t *assets, int sprite_id, int x, int y);
 int gfx_init(SDL_Window *window);
 assets_t *assets_new(GLint* program, int sprite_num);

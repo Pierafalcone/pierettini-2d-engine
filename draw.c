@@ -65,7 +65,7 @@ GLuint compile_shader(GLenum shader_type, const char *filename)
     return shader;
 }
 
-void sprite_load(assets_t *assets, const char *filename, int id)
+void sprite_load(assets_t *assets, int id, const char *filename)
 {
     GLuint texture;
     sprite_t sprite;
