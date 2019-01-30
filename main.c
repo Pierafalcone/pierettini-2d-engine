@@ -3,6 +3,7 @@
 #include <math.h>
 
 const int SPRITE_NUM = 16;
+const float MAX_FPS = 60.0;
 
 assets_t *assets;
 
@@ -10,8 +11,12 @@ float counter = 0;
 float position_x = 0;
 float position_y = 0;
 
+Uint32 start_tick;
+Uint32 end_tick;
+double delta = 0;
+
 void __init__()
-{
+{    
     sprite_load(assets, "pizza.jpg", 0);
     sprite_load(assets, "scooter.png", 1);
     sprite_load(assets, "ball.gif", 2);
@@ -22,7 +27,7 @@ void __init__()
 
 void __update__()
 {
-    counter += 0.0005;
+    counter += 0.02;
 }
 
 void __draw__()
@@ -97,12 +102,22 @@ int main()
                 return 0;
         }
 
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        start_tick = SDL_GetTicks();
+        delta += start_tick - end_tick;
 
-        __update__();
-        __draw__();
+        if (delta > 1000 / MAX_FPS)
+        {
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        SDL_GL_SwapWindow(window);
+            __update__();
+            __draw__();
+
+            SDL_GL_SwapWindow(window);
+
+            delta = 0;
+        }
+
+        end_tick = SDL_GetTicks();
     }
 
     return 0;
