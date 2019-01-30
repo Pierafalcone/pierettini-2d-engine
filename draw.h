@@ -5,6 +5,11 @@
 #include <glad/glad.h>
 #include "stb_image.h"
 
+#define SPRITE(id, x, y) sprite_draw(assets, id, x, y);
+#define BUTTON(id)
+#define SOUND(id)
+#define MUSIC(id)
+
 typedef struct sprite
 {
     int width;
