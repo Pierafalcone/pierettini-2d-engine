@@ -18,12 +18,12 @@ PIERETTINI_INIT()
 
 void __init__()
 {
-    SPRITE_LOAD(0, "pizza.jpg");
-    SPRITE_LOAD(1, "scooter.png");
-    SPRITE_LOAD(2, "ball.gif");
-    SPRITE_LOAD(3, "bread.gif");
-    SPRITE_LOAD(4, "mount.gif");
-    SPRITE_LOAD(5, "sushi.gif");
+    SPRITE_LOAD(0, "imgs/pizza.jpg");
+    SPRITE_LOAD(1, "imgs/scooter.png");
+    SPRITE_LOAD(2, "imgs/ball.gif");
+    SPRITE_LOAD(3, "imgs/bread.gif");
+    SPRITE_LOAD(4, "imgs/mount.gif");
+    SPRITE_LOAD(5, "imgs/sushi.gif");
 }
 
 void __update__()

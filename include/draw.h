@@ -22,14 +22,14 @@ typedef struct assets
 {
     sprite_t *sprites;
     int sprite_len;
-    GLint* program;
+    GLuint *program;
 } assets_t;
 
 GLuint compile_shader(GLenum shader_type, const char *filename);
 void sprite_load(assets_t *assets, int id, const char *filename);
 void sprite_draw(assets_t *assets, int sprite_id, int x, int y);
 int gfx_init(SDL_Window *window);
-assets_t *assets_new(GLint* program, int sprite_num);
+assets_t *assets_new(GLuint *program, int sprite_num);
 void init_geometry(int sprite_num);
 static void get_uniforms(GLuint program);
 

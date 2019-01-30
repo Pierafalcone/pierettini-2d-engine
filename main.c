@@ -57,7 +57,7 @@ int main()
 
     /* END SDL STUFF */
 
-    assets = assets_new(program, SPRITE_NUM);
+    assets = assets_new(&program, SPRITE_NUM);
 
     __init__();
 
