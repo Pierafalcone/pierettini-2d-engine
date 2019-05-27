@@ -6,7 +6,8 @@
 	],
 	"settings": {
 		"files.associations": {
-			"main.h": "c"
+			"main.h": "c",
+			"game.h": "c"
 		},
 		"cSpell.enabled": false
 	}
