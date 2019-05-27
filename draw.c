@@ -36,9 +36,9 @@ GLuint compile_shader(GLenum shader_type, const char *filename)
     SDL_RWclose(rw);
 
     GLuint shader = glCreateShader(shader_type);
-    // assign the shader code
+    // Assign the shader code
     glShaderSource(shader, 1, (const GLchar **)&source, (GLint *)&file_len);
-    // compile the shader
+    // Compile the shader
     glCompileShader(shader);
 
     SDL_free(source);
@@ -115,10 +115,10 @@ assets_t *assets_new(GLuint *program, int sprite_num)
 
 void init_geometry(int sprite_num)
 {
-    // allocate 1 VAO (in GPU)
+    // Allocate 1 VAO (in GPU)
     GLuint vao;
     glGenVertexArrays(1, &vao);
-    // bind the VAO (in GPU). now it is the active one
+    // Bind the VAO (in GPU). now it is the active one
     glBindVertexArray(vao);
 
     GLuint vbo[2];

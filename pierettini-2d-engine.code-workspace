@@ -7,6 +7,7 @@
 	"settings": {
 		"files.associations": {
 			"main.h": "c"
-		}
+		},
+		"cSpell.enabled": false
 	}
 }
